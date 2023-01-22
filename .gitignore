@@ -1,0 +1,9 @@
+
+# build with openssl
+server.cert
+server.key
+
+# use npm install
+node_modules
+package-lock.json
+
