@@ -1,0 +1,6 @@
+# Random sample of dir tree to be locally served via HTTP
+*
+
+!.gitignore
+!hellogapi.html
+

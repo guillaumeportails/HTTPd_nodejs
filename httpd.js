@@ -8,7 +8,7 @@
 //
 // + En WSL, le port 80 n'est utilisable qu'en su
 //
-// Usage :
+// Usage Linux / WSL :
 // + Installer nodejs, et des paquets :
 //   sudo apt install nodejs   # Ou installation du MSI cote Windows
 //   npm install express
@@ -17,6 +17,11 @@
 //   => server.cert: The self-signed certificate file
 //   => server.key: The private key of the certificate
 //
+// Usage Windows :
+// + Installer node.js et npm
+// + CLI :
+//   - npm install express
+//   - run.bat
 
 // Requiring in-built https for creating
 // https server
@@ -78,7 +83,12 @@ app.get('/brosub/', function (req, res) {
 	console.log(`  path    = "${req.path}"`);
 	console.log(`  url     = "${req.originalUrl}"`);
 	console.log(`  domains = "${req.subdomains}"`);
-	res.sendFile(path.resolve(__dirname + '/brosub/bro.html'));
+    // CORS try
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', "GET, OPTIONS, PUT, POST, DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    //
+    res.sendFile(path.resolve(__dirname + '/brosub/bro.html'));
 });
 
 // Post request for getting input from the form
@@ -100,4 +110,6 @@ const options = {
 // options and app object
 https.createServer(options, app).listen(443, function (req, res) {
 	console.log("Server started at port 443");
+	console.log("https://localhost/");
 });
+
