@@ -28,71 +28,23 @@ Modified :
     <p>Drive API Quickstart</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+    <button id="authorize_button" onclick="handleAuthClick()" style="visibility:hidden;">Authorize</button>
 
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script type="text/javascript">
-      /* exported gapiLoaded */
-      /* exported gisLoaded */
-      /* exported handleAuthClick */
-
-      // TODO(developer): Set to client ID and API key from the Developer Console
-      const API_KEY = 'cf https://console.cloud.google.com/apis/credentials';
-
-      // Discovery doc URL for APIs used by the quickstart
-      const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-
-      // Authorization scopes required by the API; multiple scopes can be
-      // included, separated by spaces.
-      const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
-
-      let tokenClient;
-      let gapiInited = false;
-
-      document.getElementById('authorize_button').style.visibility = 'hidden';
-
-      /**
-       * Callback after api.js is loaded.
-       */
-      function gapiLoaded() {
-        gapi.load('client', initializeGapiClient);
-      }
-
-      /**
-       * Callback after the API client is loaded. Loads the
-       * discovery doc to initialize the API.
-       */
-      async function initializeGapiClient() {
-        await gapi.client.init({
-          apiKey: API_KEY,
-          discoveryDocs: [DISCOVERY_DOC],
-        });
-        gapiInited = true;
-        maybeEnableButtons();
-      }
-
-      /**
-       * Enables user interaction after all libraries are loaded.
-       */
-      function maybeEnableButtons() {
-        if (gapiInited) {
-          document.getElementById('authorize_button').style.visibility = 'visible';
-        }
-      }
-
       /**
        *  Sign in the user upon button click.
        */
-      function handleAuthClick() {
+       function handleAuthClick() {
           document.getElementById('authorize_button').innerText = 'Refresh';
-          listFiles();
+          listFiles();   // ? IL FAUT REPETER SI SA RATE ?
       }
 
       /**
        * Print metadata for first 10 files.
        */
-      async function listFiles() {
+       async function listFiles() {
         let response;
         console.log('calling gapi.client.drive');
         try {
@@ -103,6 +55,7 @@ Modified :
             fields: 'files(id, name)',
           });
         } catch (err) {
+          console.log('caught ' + err.message);
           document.getElementById('content').innerText = err.message;
           return;
         }
@@ -116,6 +69,28 @@ Modified :
             (str, file) => `${str}${file.name} (${file.id})\n`,
             'Files:\n');
         document.getElementById('content').innerText = output;
+      }
+
+      /**
+       * Callback after api.js is loaded.
+       */
+      function gapiLoaded() {
+        gapi.load('client', initializeGapiClient);
+      }
+
+      /**
+       * Callback after the API client is loaded. Loads the
+       * discovery doc to initialize the API.
+       */
+      async function initializeGapiClient() {
+        console.log('gapi.client.init');
+        await gapi.client.init({
+          apiKey:  'AIzaSyA1IFKmTOXEHiA5w9QHRNOR64pLTk2ZCSw',
+          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+        });
+        // ? Not reached is using file: protocol, ok with https: 
+        console.log('gapi.client.init-ed');
+        document.getElementById('authorize_button').style.visibility = 'visible';
       }
     </script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
